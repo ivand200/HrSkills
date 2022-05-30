@@ -48,6 +48,31 @@ class ClientTagFieldSerializer(serializers.ModelSerializer):
         fields = ["user", "id", "tag",]
 
 
+class ClientTagsUpdateSecondSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Tag
+        fields = ["id"]
+
+
+class ClientUpdateTagsSerializer(serializers.ModelSerializer):
+    tag = ClientTagsUpdateSecondSerializer(many=True)
+    # tag = serializers.SlugRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     slug_field="id"
+    # )
+
+    class Meta:
+        model = Client
+        fields = ["tag", "user"]
+
+    def update(self, instance, validated_data):
+        instance.tag = validated_data.get("tags", instance.tag)
+        instance.save()
+        return instance
+
 class ClientTagsSerializer(serializers.ModelSerializer):
     tag = serializers.SlugRelatedField(
         many=True,
