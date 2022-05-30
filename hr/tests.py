@@ -20,7 +20,7 @@ def test_create_delete_tag():
         "title": "footbal"
     }
 
-    request = requests.post("http://0.0.0.0:5000/api/v1/tags/", json=payload)
+    request = requests.post("http://127.0.0.1:8000/api/v1/tags/", json=payload)
     request_body = request.json()
     pk = request_body["id"]
 
@@ -28,7 +28,7 @@ def test_create_delete_tag():
     assert request_body["title"] == "footbal"
     assert request_body["field"] == 3
 
-    request_delete = requests.delete(f"http://0.0.0.0:5000/api/v1/tags/{pk}/")
+    request_delete = requests.delete(f"http://127.0.0.1:8000/api/v1/tags/{pk}/")
 
     assert request.status_code == 201
 
@@ -44,7 +44,7 @@ def test_get_tag_with_field(tag_id, field, tag):
     """
     Request tag with field by tag.id
     """
-    request = requests.get(f"http://0.0.0.0:5000/api/v1/tags/{tag_id}/")
+    request = requests.get(f"http://127.0.0.1:8000/api/v1/tags/{tag_id}/")
     request_body = request.json()
 
     assert request.status_code == 200
@@ -58,7 +58,7 @@ def test_get_all_tags():
     """
     Request to get all tags with fields
     """
-    request = requests.get("http://0.0.0.0:5000/api/v1/tags/")
+    request = requests.get("http://127.0.0.1:8000/api/v1/tags/")
     request_body = request.json()
 
     assert request.status_code == 200
@@ -71,7 +71,7 @@ def test_get_fields():
     """
     Get list of all fields
     """
-    request = requests.get("http://0.0.0.0:5000/api/v1/fields/")
+    request = requests.get("http://127.0.0.1:8000/api/v1/fields/")
     request_body = request.json()
 
     assert request.status_code == 200
@@ -88,7 +88,7 @@ def test_get_field_with_all_tags(field_id, tag_field_id):
     """
     Get field with tags
     """
-    request = requests.get(f"http://0.0.0.0:5000/api/v1/fields/{field_id}")
+    request = requests.get(f"http://127.0.0.1:8000/api/v1/fields/{field_id}")
     request_body = request.json()
 
     assert request.status_code == 200
