@@ -9,8 +9,8 @@ router = DefaultRouter()
 
 router.register("fields", FieldViewSet, basename="field")
 router.register("tags", TagViewSet, basename="tag")
-router.register("client", ClientViewSet, basename="client")
-router.register("manager", ManagerViewSet, basename="manager")
+router.register("clients", ClientViewSet, basename="client")
+router.register("managers", ManagerViewSet, basename="manager")
 urlpatterns = router.urls + [
     path("tagsclient/<int:pk>/", ClientTag.as_view()),
 ]

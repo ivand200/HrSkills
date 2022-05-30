@@ -11,6 +11,26 @@ import pytest
 client = RequestsClient()
 
 
+def test_add_and_delete_tags_to_client():
+    """
+    Request to add and delete tags to client
+    """
+    payload = {
+        "tags_id": [
+            1, 3, 5
+        ]
+    }
+    request = requests.put("http://127.0.0.1:8000/api/v1/clients/8/update_tags/", json=payload)
+    request_body = request.json()
+
+    assert request.status_code == 200
+
+    request_delete = requests.delete("http://127.0.0.1:8000/api/v1/clients/8/delete_tags/", json=payload)
+    request_delete_body = request_delete.json()
+
+    assert request.status_code == 200
+
+
 def test_create_delete_tag():
     """
     Request for create and delete tag
