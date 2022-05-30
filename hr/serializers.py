@@ -2,7 +2,8 @@ from dataclasses import field
 import email
 from enum import unique
 from rest_framework import serializers
-from .models import Field, Tag, Client
+from .models import Field, Tag, Client, ManagerHR
+from django.contrib.auth.models import Group
 from skill_auth.models import User
 
 
@@ -14,11 +15,6 @@ class FieldSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    # field = serializers.SlugRelatedField(
-    #     many=True,
-    #     read_only=True,
-    #     slug_field="title"
-    # )
 
     class Meta:
         model = Tag
@@ -36,12 +32,20 @@ class TagFieldSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ClientFullSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["username", "email"]
+
+
 class ClientTagFieldSerializer(serializers.ModelSerializer):
     tag = TagFieldSerializer(read_only=True, many=True)
+    user = ClientFullSerializer(read_only=True)
 
     class Meta:
         model = Client
-        fields = ["tag", "id"]
+        fields = ["user", "id", "tag",]
 
 
 class ClientTagsSerializer(serializers.ModelSerializer):
@@ -55,7 +59,8 @@ class ClientTagsSerializer(serializers.ModelSerializer):
         model = Client
         fields = ["tag", "id"]
 
-class ClientSerializer(serializers.ModelSerializer):
+
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
