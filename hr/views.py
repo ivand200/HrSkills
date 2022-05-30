@@ -12,8 +12,15 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 
-from hr.models import Client, Tag, Field
-from hr.serializers import ClientSerializer, TagFieldSerializer, TagSerializer, FieldSerializer, ClientTagsSerializer, ClientTagFieldSerializer
+from hr.models import Client, ManagerHR, Tag, Field
+from hr.serializers import (
+    UserSerializer,
+    TagFieldSerializer,
+    TagSerializer,
+    FieldSerializer,
+    ClientTagsSerializer,
+    ClientTagFieldSerializer,
+)
 
 
 # Create your views here.
@@ -112,7 +119,7 @@ class ClientViewSet(viewsets.ViewSet):
         # return Response(serializer.data)
 
     def create(self, request):
-        serializer = ClientSerializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
         # return Response(serializer.initial_data)
         if serializer.is_valid():
             new_client = serializer.save()
@@ -126,6 +133,23 @@ class ClientViewSet(viewsets.ViewSet):
 
     def update(self, request, pk=None):
         pass
+
+
+class ManagerViewSet(viewsets.ViewSet):
+    """
+    Manager create, delete, update
+    """
+    def create(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            new_manager = serializer.save()
+            manager_group, _ = Group.objects.get_or_create(name="Managers")
+            manager_group.user_set.add(new_manager)
+            manager_group.save()
+            manager = ManagerHR(user=new_manager)
+            manager.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ClientTag(APIView):
